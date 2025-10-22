@@ -5,7 +5,7 @@ Ovaj skup podataka prikazuje osnovne informacije o deset poznatih europskih skij
 Karlo Mance
 ## Godina izrade: 
 2025./2026.
-## erzija: 
+## Verzija: 
 1.0
 ## Datum izrade: 
 22. listopada 2025.
@@ -34,4 +34,5 @@ Dataset se smije slobodno koristiti i dijeliti uz navođenje autora, ne smije se
     Naziv_staze – naziv staze
     Duzina_staze_km – duljina staze (km)
     Tezina_staze – težina staze (Plava, Crvena, Crna)
+
 
