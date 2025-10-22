@@ -1,25 +1,25 @@
 Ovaj skup podataka prikazuje osnovne informacije o deset poznatih europskih skijališta. Za svako skijalište navedeni su zemljopisni, tehnički i ekonomski podaci (država, regija, visinske razlike, ukupna duljina staza, broj žičara, cijena dnevne karte te web-stranica), kao i popis pripadajućih staza s njihovim duljinama i težinom. 
 
-#Atributi
-##Autor: 
+# Atributi
+## Autor: 
 Karlo Mance
-##Godina izrade: 
+## Godina izrade: 
 2025./2026.
-##Verzija: 
+## erzija: 
 1.0
-##Datum izrade: 
+## Datum izrade: 
 22. listopada 2025.
-##Jezik podataka: 
+## Jezik podataka: 
 hrvatski
-##Format datoteka: 
+## Format datoteka: 
 JSON, CSV
-##Broj zapisa: 
+## Broj zapisa: 
 10 skijališta
-##Licencija: 
+## Licencija: 
 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
-##Opis licencije: 
+## Opis licencije: 
 Dataset se smije slobodno koristiti i dijeliti uz navođenje autora, ne smije se koristiti u komercijalne svrhe, a sve izvedenice moraju biti objavljene pod istom licencom.
-##Opis atributa:
+## Opis atributa:
     Naziv – naziv skijališta
     Drzava – država u kojoj se skijalište nalazi
     Regija – geografska regija skijališta
@@ -34,3 +34,4 @@ Dataset se smije slobodno koristiti i dijeliti uz navođenje autora, ne smije se
     Naziv_staze – naziv staze
     Duzina_staze_km – duljina staze (km)
     Tezina_staze – težina staze (Plava, Crvena, Crna)
+
