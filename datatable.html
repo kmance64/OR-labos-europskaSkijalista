@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Interaktivna tablica – Europska skijališta</title>
+
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 4px;
+        }
+        input, select {
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Interaktivna tablica - Europska skijališta</h1>
+
+    <label>Filtriraj: </label>
+    <input type="text" id="filterText" placeholder="Upiši pojam...">
+
+    <label> Atribut: </label>
+    <select id="filterField">
+        <option value="Naziv">Naziv skijališta</option>
+        <option value="Drzava">Država</option>
+        <option value="Regija">Regija</option>
+        <option value="Naziv_staze">Naziv staze</option>
+        <option value="Tezina_staze">Težina staze</option>
+    </select>
+
+    <button onclick="downloadJSON()">Preuzmi filtrirano (JSON)</button>
+    <button onclick="downloadCSV()">Preuzmi filtrirano (CSV)</button>
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Država</th>
+                <th>Regija</th>
+                <th>Visina_pocetna</th>
+                <th>Visina_vrh</th>
+                <th>Staza</th>
+                <th>Duljina staze</th>
+                <th>Težina</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+<script>
+let flatData = [];
+
+fetch("http://localhost:3000/skijalista")
+  .then(res => res.json())
+  .then(data => {
+      flatData = data;
+      renderTable(flatData);
+  });
+
+function renderTable(data) {
+    const tbody = document.querySelector("#table tbody");
+    tbody.innerHTML = "";
+    data.forEach(row =>
+        tbody.innerHTML += `
+        <tr>
+            <td>${row.Naziv}</td>
+            <td>${row.Drzava}</td>
+            <td>${row.Regija}</td>
+            <td>${row.Visina_pocetna_m}</td>
+            <td>${row.Visina_vrh_m}</td>
+            <td>${row.Naziv_staze}</td>
+            <td>${row.Duzina_staze_km}</td>
+            <td>${row.Tezina_staze}</td>
+        </tr>`
+    );
+}
+
+document.getElementById("filterText").addEventListener("input", filter);
+document.getElementById("filterField").addEventListener("change", filter);
+
+function filter() {
+    const text = document.getElementById("filterText").value.toLowerCase();
+    const field = document.getElementById("filterField").value;
+
+    const filtered = flatData.filter(r =>
+        r[field].toString().toLowerCase().includes(text)
+    );
+
+    renderTable(filtered);
+}
+
+function downloadJSON() {
+    const text = document.getElementById("filterText").value.toLowerCase();
+    const field = document.getElementById("filterField").value;
+
+    const filtered = flatData.filter(r =>
+        r[field].toString().toLowerCase().includes(text)
+    );
+
+    const blob = new Blob([JSON.stringify(filtered, null, 2)], {type: "application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "filtered.json";
+    a.click();
+}
+
+function downloadCSV() {
+    const text = document.getElementById("filterText").value.toLowerCase();
+    const field = document.getElementById("filterField").value;
+
+    const filtered = flatData.filter(r =>
+        r[field].toString().toLowerCase().includes(text)
+    );
+
+    let csv = "Naziv,Drzava,Regija,Visina_pocetna_m,Visina_vrh_m,Naziv_staze,Duzina_staze_km,Tezina_staze\n";
+
+    filtered.forEach(r => {
+        csv += `${r.Naziv},${r.Drzava},${r.Regija},${r.Visina_pocetna_m},${r.Visina_vrh_m},${r.Naziv_staze},${r.Duzina_staze_km},${r.Tezina_staze}\n`;
+    });
+
+    const blob = new Blob([csv], {type: "text/csv"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "filtered.csv";
+    a.click();
+}
+</script>
+</body>
+</html>

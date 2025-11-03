@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kmance64/OR-labos-europskaSkijalista/blob/main/schema.json",
+  "title": "Europska skijališta",
+  "description": "Dataset koji opisuje skijališta u Europi s osnovnim atributima i stazama.",
+  "type": "array",
+
+  "items": {
+    "type": "object",
+    "properties": {
+      "Naziv": { "type": "string" },
+      "Drzava": { "type": "string" },
+      "Regija": { "type": "string" },
+      "Visina_pocetna_m": { "type": "number" },
+      "Visina_vrh_m": { "type": "number" },
+      "Ukupna_duzina_staza_km": { "type": "number" },
+      "Broj_zicara": { "type": "number" },
+      "Cijena_dnevne_karte_EUR": { "type": "number" },
+      "Web_stranica": { "type": "string", "format": "uri" },
+
+      "Koordinate": {
+        "type": "object",
+        "properties": {
+          "Geografska_sirina": { "type": "number" },
+          "Geografska_duzina": { "type": "number" }
+        },
+        "required": [
+          "Geografska_sirina",
+          "Geografska_duzina"
+        ]
+      },
+
+      "Staze": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Naziv": { "type": "string" },
+            "Duzina_km": { "type": "number" },
+            "Tezina": { "type": "string" }
+          },
+          "required": ["Naziv", "Duzina_km", "Tezina"]
+        }
+      }
+    },
+
+    "required": [
+      "Naziv",
+      "Drzava",
+      "Regija",
+      "Visina_pocetna_m",
+      "Visina_vrh_m",
+      "Ukupna_duzina_staza_km",
+      "Broj_zicara",
+      "Cijena_dnevne_karte_EUR",
+      "Web_stranica",
+      "Koordinate",
+      "Staze"
+    ]
+  }
+}
