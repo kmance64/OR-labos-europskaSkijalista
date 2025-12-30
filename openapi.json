@@ -1,0 +1,187 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Europska skijališta REST API",
+    "description": "REST API za upravljanje i dohvat podataka o europskim skijalištima",
+    "contact": {
+      "name": "Karlo Mance",
+      "email": "km55586@fer.hr"
+    }
+  },
+  "paths": {
+    "/skijalista": {
+      "get": {
+        "summary": "Dohvat svih skijališta",
+        "description": "Vraća kolekciju svih skijališta",
+        "responses": {
+          "200": {
+            "description": "Uspješan dohvat podataka"
+          }
+        }
+      },
+      "post": {
+        "summary": "Dodavanje novog skijališta",
+        "description": "Dodaje novo skijalište u bazu",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {}
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Skijalište dodano"
+          },
+          "400": {
+            "description": "Neispravni podaci"
+          }
+        }
+      }
+    },
+    "/skijalista/{id}": {
+      "get": {
+        "summary": "Dohvat skijališta po ID-u",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Jedinstveni identifikator skijališta",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Uspješan dohvat"
+          },
+          "400": {
+            "description": "Neispravan ID"
+          },
+          "404": {
+            "description": "Skijalište ne postoji"
+          }
+        }
+      },
+      "put": {
+        "summary": "Ažuriranje skijališta",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {}
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Skijalište ažurirano"
+          },
+          "404": {
+            "description": "Skijalište ne postoji"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Brisanje skijališta",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Skijalište obrisano"
+          },
+          "404": {
+            "description": "Skijalište ne postoji"
+          }
+        }
+      }
+    },
+    "/skijalista/drzava/{drzava}": {
+      "get": {
+        "summary": "Dohvat skijališta po državi",
+        "parameters": [
+          {
+            "name": "drzava",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Uspješan dohvat"
+          }
+        }
+      }
+    },
+    "/skijalista/min-visina/{visina}": {
+      "get": {
+        "summary": "Dohvat skijališta po minimalnoj visini",
+        "parameters": [
+          {
+            "name": "visina",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Uspješan dohvat"
+          }
+        }
+      }
+    },
+    "/skijalista/zicare/{broj}": {
+      "get": {
+        "summary": "Dohvat skijališta po broju žičara",
+        "parameters": [
+          {
+            "name": "broj",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Uspješan dohvat"
+          }
+        }
+      }
+    },
+    "/openapi": {
+      "get": {
+        "summary": "Dohvat OpenAPI specifikacije",
+        "responses": {
+          "200": {
+            "description": "OpenAPI JSON dokument"
+          }
+        }
+      }
+    }
+  }
+}
