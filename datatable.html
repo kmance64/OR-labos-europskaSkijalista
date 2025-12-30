@@ -2,7 +2,7 @@
 <html lang="hr">
 <head>
     <meta charset="UTF-8">
-    <title>Interaktivna tablica – Europska skijališta</title>
+    <title>Interaktivna tablica - Europska skijališta</title>
 
     <style>
         table, th, td {
@@ -57,7 +57,7 @@ let flatData = [];
 fetch("http://localhost:3000/skijalista")
   .then(res => res.json())
   .then(data => {
-      flatData = data;
+      flatData = data.response;
       renderTable(flatData);
   });
 
