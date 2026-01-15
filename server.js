@@ -2,14 +2,38 @@ import express from "express";
 import cors from "cors";
 import { MongoClient, ObjectId } from "mongodb";
 import fs from "fs";
-
+import { checkJwt } from "./auth.js";
 import swaggerUi from "swagger-ui-express";
-const openapiSpec = JSON.parse(fs.readFileSync("openapi.json", "utf8"));
 
+const openapiSpec = JSON.parse(fs.readFileSync("openapi.json", "utf8"));
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use("/static", express.static("."));
+app.get("/refresh", checkJwt, async (req, res) => {
+    try {
+        const data = await db.collection("skijalista").find().toArray();
+
+        fs.writeFileSync("export.json", JSON.stringify(data, null, 2));
+
+        let csv = "Naziv,Drzava,Regija,Visina_pocetna_m,Visina_vrh_m\n";
+        data.forEach(s => {
+            csv += `"${s.Naziv}","${s.Drzava}","${s.Regija}",${s.Visina_pocetna_m},${s.Visina_vrh_m}\n`;
+        });
+
+        fs.writeFileSync("export.csv", csv);
+
+        res.json({
+            status: "OK",
+            message: "Preslike osvježene",
+            response: null
+        });
+    } catch {
+        res.status(500).json({ status: "Error" });
+    }
+});
 
 // ---------------------
 // MongoDB
@@ -36,6 +60,8 @@ function apiResponse(res, statusCode, status, message, response) {
         response
     });
 }
+
+
 
 // -----------------------
 // a) GET – cijela kolekcija + filtriranje
@@ -88,8 +114,24 @@ app.get("/skijalista/:id", async (req, res) => {
         if (!skijaliste) {
             return apiResponse(res, 404, "Not Found", "Skijalište ne postoji", null);
         }
+        // --- JSON-LD semantika ---
+        const skijalisteLD = {
+            "@context": "https://schema.org",
+            "@type": "TouristDestination",
+            "name": skijaliste.Naziv,
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": skijaliste.Drzava,
+                "addressRegion": skijaliste.Regija
+            },
+            "elevation": {
+                "@type": "QuantitativeValue",
+                "value": skijaliste.Visina_vrh_m,
+                "unitText": "m"
+            }
+        };
 
-        apiResponse(res, 200, "OK", "Dohvaćeno skijalište", skijaliste);
+        apiResponse(res, 200, "OK", "Dohvaćeno skijalište", skijalisteLD);
     } catch {
         apiResponse(res, 400, "Bad Request", "Neispravan ID", null);
     }
@@ -129,7 +171,7 @@ app.get("/skijalista/min-visina/:visina", async (req, res) => {
 app.get("/skijalista/zicare/:broj", async (req, res) => {
     try {
         const data = await db.collection("skijalista")
-            .find({ Broj_zicara: { $gte: Number(req.params.broj) } })
+            .find({ Broj_zicara: Number(req.params.broj) } )
             .toArray();
 
         apiResponse(res, 200, "OK", "Skijališta po broju žičara", data);
@@ -141,7 +183,7 @@ app.get("/skijalista/zicare/:broj", async (req, res) => {
 // --------------------
 // d) POST – dodavanje resursa
 // --------------------
-app.post("/skijalista", async (req, res) => {
+app.post("/skijalista", checkJwt, async (req, res) => {
     try {
         const result = await db.collection("skijalista").insertOne(req.body);
         apiResponse(res, 201, "Created", "Skijalište dodano", result);
@@ -153,7 +195,7 @@ app.post("/skijalista", async (req, res) => {
 // --------------------
 // e) PUT – ažuriranje resursa
 // --------------------
-app.put("/skijalista/:id", async (req, res) => {
+app.put("/skijalista/:id", checkJwt, async (req, res) => {
     try {
         const result = await db.collection("skijalista").updateOne(
             { _id: new ObjectId(req.params.id) },
@@ -173,7 +215,7 @@ app.put("/skijalista/:id", async (req, res) => {
 // --------------------
 // f) DELETE – brisanje resursa
 // --------------------
-app.delete("/skijalista/:id", async (req, res) => {
+app.delete("/skijalista/:id", checkJwt, async (req, res) => {
     try {
         const result = await db.collection("skijalista").deleteOne({
             _id: new ObjectId(req.params.id)
